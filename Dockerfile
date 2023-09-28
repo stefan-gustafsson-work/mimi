@@ -9,9 +9,6 @@ RUN apt-get update && \
 # Command to install standard R packages from CRAN; enter the list of required packages for your app here
 RUN Rscript -e 'install.packages(c("shiny","shinymanager","shinyBS","dplyr"))'
 
-# Command to install packages from Bioconductor; enter the list of required Bioconductor packages for your app here
-RUN Rscript -e 'BiocManager::install(c("Biostrings"),ask = F)'
-
 RUN rm -rf /srv/shiny-server/*
 COPY /app.R /srv/shiny-server/app.R
 COPY /dms.rds /srv/shiny-server/dms.rds
