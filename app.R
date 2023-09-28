@@ -1,6 +1,7 @@
 library(shiny)
 library(shinymanager)
 library(shinyBS)
+library(dplyr)
 
 
 # Setup basic log in
