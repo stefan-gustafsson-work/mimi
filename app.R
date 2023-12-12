@@ -4,44 +4,15 @@ library(shinyBS)
 library(dplyr)
 
 
-# Setup basic log in
-inactivity <- "function idleTimer() {
-var t = setTimeout(logout, 120000);
-window.onmousemove = resetTimer;
-window.onmousedown = resetTimer;
-window.onclick = resetTimer;
-window.onscroll = resetTimer;
-window.onkeypress = resetTimer;
-function logout() {
-window.close();
-}
-function resetTimer() {
-clearTimeout(t);
-t = setTimeout(logout, 120000);
-}
-}
-idleTimer();"
-
-credentials = data.frame(
-    user = "mimi",
-    password = "c2NyeXB0ABEAAAAIAAAAARMnMC1QW3EGlj4+ECmYEM2MOkOQWEXMOE/Q/ozcmV7Pn9yNGdl61pLDfoyZv4rIMpvixCiJiJG315UQ98D6LNyUCzlhdGyXhR8LaqwBm8qG",
-    is_hashed_password = TRUE,
-    permissions = "standard",
-    stringsAsFactors = FALSE
-)
-
-
 # App user interface defining the form where new values are entered
-ui <-
-secure_app(head_auth = tags$script(inactivity),
-    fluidPage(
+ui <- fluidPage(
         titlePanel("Imminent myocardial infarction prediction model"),
-
+        
         # Layout: left sidebar panel with input, main (right) panel with output
         
         # Input sidebar
         sidebarLayout(
-
+            
             # Sidebar panel with required input
             sidebarPanel(
                 tags$style(HTML(".tooltip > .tooltip-inner {background-color: red;}")),
@@ -55,18 +26,17 @@ secure_app(head_auth = tags$script(inactivity),
                 sliderInput("ldl", "LDL-C (mmol/L)", min = 0.1, max = 25.0, value = 3.8, step = 0.1, ticks = FALSE),
                 sliderInput("hdl", "HDL-C (mmol/L)", min = 0.1, max = 25.0, value = 1.3, step = 0.1, ticks = FALSE),
                 selectInput("smok", "Smoking status", choices = list("Never", "Former", "Current"), selected = "Former", multiple = FALSE),
-
-                
+            
+            
             # Section with with optional/advanced settings.
             hr(style = "border-top: 1px solid #000000;"),
-
+            
             selectInput("custom", "Advanced settings", choices = list("Do not show", "MIMI/UKBB values", "Custom values"), selected = "Do not show", multiple = FALSE),
-
+            
             conditionalPanel(
                 condition = "input.custom == 'MIMI/UKBB values'",
                 selectInput("s0", tags$span("S0[t=182]", bsButton("s0_info", label = "", icon = icon("info"), style = "info", size = "extra-small")), choices = list("MIMI", "UKBB"), selected = "MIMI", multiple = FALSE),
                 selectInput("m", "Population means", choices = list("MIMI", "UKBB"), selected = "MIMI", multiple = FALSE)
-
             ),
             conditionalPanel(
                 condition = "input.custom == 'Custom values'",
@@ -83,7 +53,7 @@ secure_app(head_auth = tags$script(inactivity),
                 sliderInput("m_former_smok", "Proportion former smokers", min = 0, max = 1, value = 0.37, step = 0.01, ticks = FALSE),
                 sliderInput("m_current_smok", "Proportion current smokers", min = 0, max = 1, value = 0.26, step = 0.01, ticks = FALSE)
             ),
-
+            
             bsPopover(
                 id = "diab_info", placement = "right", trigger = "hover", options = list(container = "body"),
                 title = "Definition", content = "Any form of diabetes mellitus. However, it should be noted that in the training of the model, almost all diabetes cases were of type II."
@@ -126,13 +96,9 @@ secure_app(head_auth = tags$script(inactivity),
         )
     )
 )
-)#login
 
 # Server logic for making the output the prediction results
 server <- function(input, output, session) {
-    
-    auth <- secure_server(check_credentials = check_credentials(credentials))
-    
     
     # Make sure that the proportions of a factor variable do to go above 100%
     ## Education
