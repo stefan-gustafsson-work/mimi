@@ -89,7 +89,7 @@ ui <- fluidPage(
                     tags$p("This risk equation gives an estimate of how many people with similar answers/measurements will have a heart attack within the next six months. However, it does not predict the future for any one individual; it cannot identify who will be free from disease and who will have a heart attack. As in any statistical analysis, the associations of variables with the risk of heart attack have a degree of uncertainty, so does the point estimate of this risk equation. Further, this prediction model was developed in a population of mostly middle-aged European individuals and how it performs in other populations is unknown."),
                     "If you have any questions or concerns about the results, please contact ", tags$a(href="mailto:johan.sundstrom@uu.se", "Johan Sundström"),
                     br(),
-                    tags$p("The full paper (PMID: [to be added]) can be accessed here [to be added].")
+                    "The full paper can be accessed ", tags$a(href="https://doi.org/10.1038/s44161-024-00422-2", "here"), "."
                 ),
                 id = "tabs"
             )
